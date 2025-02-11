@@ -1,0 +1,54 @@
+/* Navbar Container */
+.navbar {
+    padding: 1px;
+    background-color: #000 !important; /* Dark black background */
+  }
+  
+  /* YOURFLIX Logo Styling */
+  .navbar-brand {
+    font-size: 2rem;
+    font-weight: bold;
+    color: #e50914 !important;
+    text-transform: uppercase;
+    letter-spacing: 10px; /* Adds spacing between letters */
+    text-shadow: 5px 4px 4px rgba(229, 9, 20, 0.6); /* Red shadow effect */
+    transition: transform 0.3s ease-in-out;
+  }
+  
+  .navbar-brand:hover {
+    transform: scale(1.1); /* Slight zoom effect */
+  }
+  
+  /* Navbar Links */
+  .nav-link {
+    color: white !important;
+    font-size: 1.2rem;
+    transition: color 0.3s ease-in-out;
+  }
+  
+  .nav-link:hover {
+    color: #e50914 !important;
+  }
+  
+  /* Sign In & Register Buttons */
+  .btn-danger {
+    background-color: #e50914;
+    border: none;
+    padding: 7px 15px;
+    font-size: 1rem;
+    transition: background 0.3s ease-in-out;
+  }
+  
+  .btn-danger:hover {
+    background-color: #f40612;
+  }
+  
+  /* Navbar Collapse */
+  .navbar-toggler {
+    border: none;
+  }
+  
+  .navbar-toggler-icon {
+    background-color: white;
+  }
+  
