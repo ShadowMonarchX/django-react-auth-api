@@ -54,6 +54,28 @@ class RegisterView(GenericAPIView):
                 "error": str(e)
             }, status=status.HTTP_400_BAD_REQUEST)
 
+# class RegisterView(GenericAPIView):
+#     serializer_class = UserRegisterSerializer
+
+#     def post(self, request):
+#         user = request.data
+#         serializer=self.serializer_class(data=user)
+#         if serializer.is_valid(raise_exception=True):
+#             serializer.save()
+#             user_data=serializer.data
+#             send_generated_otp_to_email(user_data['email'], request)
+#             return Response({
+#                 'data':user_data,
+#                 'message':'thanks for signing up a passcode has be sent to verify your email'
+#             }, status=status.HTTP_201_CREATED)
+#         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+
+
+
+
+
+
 class VerifyUserEmail(GenericAPIView):
     def post(self, request):
         print(request.data)
@@ -95,9 +117,6 @@ class LogoutApiView(GenericAPIView):
         return Response(status=status.HTTP_204_NO_CONTENT)
     
 
-
-
-
 class AdditionalUserDetailsView(GenericAPIView):
     serializer_class = AdditionalUserDetailsSerializer
     permission_classes = [IsAuthenticated]  
@@ -125,27 +144,23 @@ class AdditionalUserDetailsView(GenericAPIView):
             print("Error:", str(e))
             return Response({'error': str(e)}, status=status.HTTP_400_BAD_REQUEST)
         
-
 class CityFilterView(GenericAPIView):
     serializer_class = CitySerializer
 
     def get_queryset(self):
-
-        
         state_id = self.request.query_params.get('state', None)
         queryset = City.objects.all()
         if state_id:
-            queryset = queryset.filter(state__id=state_id)
-        
+            queryset = queryset.filter(state__id=state_id) 
         return queryset
-    
+
     def get(self, request):
-            city_id = request.query_params.get('city', None)
-            if city_id:
-                states = State.objects.filter(city_id=city_id)
-                serializer = self.serializer_class(states, many=True)
-                return Response(serializer.data, status=status.HTTP_200_OK)
-            return Response({"message": "State ID is required."}, status=status.HTTP_400_BAD_REQUEST)
+        state_id = request.query_params.get('state', None) 
+        if state_id:
+            cities = self.get_queryset()
+            serializer = self.serializer_class(cities, many=True)
+            return Response(serializer.data, status=status.HTTP_200_OK)
+        return Response({"message": "State ID is required."}, status=status.HTTP_400_BAD_REQUEST)
 
 
 
