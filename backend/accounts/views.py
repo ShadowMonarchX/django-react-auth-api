@@ -70,12 +70,6 @@ class RegisterView(GenericAPIView):
 #             }, status=status.HTTP_201_CREATED)
 #         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
-
-
-
-
-
-
 class VerifyUserEmail(GenericAPIView):
     def post(self, request):
         print(request.data)
