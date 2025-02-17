@@ -50,7 +50,7 @@ REST_FRAMEWORK = {
 DATABASES = {
     "default": {
         "ENGINE": "django.db.backends.mysql",
-        "NAME": "YOURFLIX",
+        "NAME": "User",
         "USER": "root",
         "PASSWORD": env('PASSWORD'),
         "HOST": "localhost",
