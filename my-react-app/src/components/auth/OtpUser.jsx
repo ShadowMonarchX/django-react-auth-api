@@ -1,7 +1,8 @@
 import { useState, useEffect, useRef } from "react";
 import { useNavigate } from "react-router-dom";
 import { useVerifyOtpMutation } from "../../services/UserAuthApi";
-import "../../styles/NetflixClone.css";
+import "../../styles/componentscss/NetflixClone.css";
+import { storeToken } from "../../services/LocalStorageService";
 
 function OtpUser() {
   const [otp, setOtp] = useState(["", "", "", "", "", ""]);
@@ -9,14 +10,14 @@ function OtpUser() {
   const navigate = useNavigate();
   const [verifyOtp] = useVerifyOtpMutation();
   const inputRefs = useRef([]);
-  const [timer, setTimer] = useState(120); // 2-minute countdown
+  const [timer, setTimer] = useState(120); 
 
   useEffect(() => {
     const countdown = setInterval(() => {
       setTimer((prevTime) => {
         if (prevTime <= 1) {
           clearInterval(countdown);
-          navigate("/register"); // Redirect to register after 2 min
+          navigate("/register"); 
         }
         return prevTime - 1;
       });
@@ -52,9 +53,15 @@ function OtpUser() {
 
     try {
       const res = await verifyOtp({ otp: enteredOtp });
+
       if (res.error) {
         setServerError(res.error.data.errors || { general: "Invalid OTP" });
       } else if (res.data) {
+        // console.log("OTP Verified:", res.data.access_token);
+        storeToken(res.data);
+        // console.log("token", res.data.access_token);
+        localStorage.setItem("access_token", res.data.data.access_token);
+        localStorage.setItem("refresh_token", res.data.data.refresh_token);
         navigate("/AdditionalUser");
       }
     } catch (error) {
@@ -68,7 +75,10 @@ function OtpUser() {
       <div className="hero-section text-center text-white d-flex justify-content-center align-items-center">
         <div className="auth-container">
           <h1 className="auth-form-title">Enter OTP</h1>
-          <p>Time remaining: {Math.floor(timer / 60)}:{(timer % 60).toString().padStart(2, '0')}</p>
+          <p>
+            Time remaining: {Math.floor(timer / 60)}:
+            {(timer % 60).toString().padStart(2, "0")}
+          </p>
 
           <form className="auth-form" onSubmit={handleSubmit}>
             <div id="otp" className="inputs d-flex justify-content-center">
@@ -85,7 +95,9 @@ function OtpUser() {
                 />
               ))}
             </div>
-            <button type="submit" className="btn-signin">Verify OTP</button>
+            <button type="submit" className="btn-signin">
+              Verify OTP
+            </button>
           </form>
 
           {serverError.general && (

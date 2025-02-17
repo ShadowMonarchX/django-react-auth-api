@@ -1,11 +1,11 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { useRegisterUserMutation } from "../../services/UserAuthApi";
+// import { storeToken } from "../../services/LocalStorageService";
 import logo1 from "../../assets/netflix-icon.png";
 import logo2 from "../../assets/google-logo.png";
-import { storeToken } from "../../services/LocalStorageService";
 import { Link } from "react-router-dom";
-import "../../styles/NetflixClone.css";
+import "../../styles/componentscss/NetflixClone.css";
 
 function Register() {
   const navigate = useNavigate();
@@ -13,10 +13,11 @@ function Register() {
   const [password, setPassword] = useState("");
   const [tc, setTc] = useState(false);
   const [serverError, setServerError] = useState(null);
-  const [registerUser] = useRegisterUserMutation();
+  const [registerUser, { isLoading }] = useRegisterUserMutation();
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+    setServerError(null);
 
     if (password.length < 6) {
       setServerError({
@@ -25,24 +26,18 @@ function Register() {
       return;
     }
 
-    const actualData = { email, password, tc };
-
     try {
-      const res = await registerUser(actualData);
-      console.log(res);
+      const res = await registerUser({ email, password, tc });
 
       if (res.error) {
-        if (res.error.data.error) {
-          setServerError({ email: "This email is already registered." });
-        } else {
-          setServerError(res.error.data || { general: "Unknown error" });
-        }
+        const errorMsg = res.error?.data?.error || "Registration failed.";
+        setServerError({ general: errorMsg });
       } else if (res.data) {
-        storeToken(res.data.token);
+        // storeToken(res.data.token);
         navigate("/OtpUser");
       }
     } catch (error) {
-      console.error("Registration failed:", error);
+      console.error("Registration error:", error);
       setServerError({ general: "Something went wrong. Please try again." });
     }
   };
@@ -52,11 +47,9 @@ function Register() {
       <div className="hero-section text-center text-white d-flex justify-content-center align-items-center">
         <div className="auth-container">
           <h1 className="auth-form-title">Register</h1>
-
           <form className="auth-form" onSubmit={handleSubmit}>
             <input
               type="email"
-              name="email"
               placeholder="Email"
               value={email}
               onChange={(e) => setEmail(e.target.value)}
@@ -69,8 +62,7 @@ function Register() {
 
             <input
               type="password"
-              name="password"
-              placeholder="Password (min. 6 characters)"
+              placeholder="Password "
               value={password}
               onChange={(e) => setPassword(e.target.value)}
               required
@@ -81,29 +73,27 @@ function Register() {
             )}
 
             <div className="aggrement-container">
-              <div className="agrement-checkbox">
+              <div className="cheak-box-css">
                 <input
-                  className="margin-bt0"
                   type="checkbox"
-                  name="tc"
                   checked={tc}
                   onChange={(e) => setTc(e.target.checked)}
                   required
                 />
               </div>
-              <div>I agree to the terms and conditions</div>
+              <div>
+                <span>I agree to the terms and conditions</span>
+              </div>
             </div>
 
-            <button type="submit" className="btn-signin">
-              Continue
+            <button type="submit" className="btn-signin" disabled={isLoading}>
+              {isLoading ? "Processing..." : "Continue"}
             </button>
           </form>
 
           {serverError?.general && (
             <div className="error-message">{serverError.general}</div>
           )}
-
-          <br />
 
           <div className="social-login">
             <button className="btn-social google-btn">

@@ -36,7 +36,7 @@
   height: 30px;
 }
 
-.btn-signin {
+/* .btn-signin {
   background: #e50914;
   color: white;
   padding: 7px 17px;
@@ -44,7 +44,7 @@
   text-decoration: none;
   font-weight: 500;
   margin-left: 25px;
-}
+} */
 
 .btn-register {
   color: white;
@@ -101,7 +101,7 @@
 }
 /* Sign In Button */
 .btn-signin {
-  width: 104%;
+  width: 105%;
   background: #e50914;
   color: white;
   border: none;
@@ -126,7 +126,7 @@
 }
 
 .btn-social {
-  width: 104%;
+  width: 100%;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -201,4 +201,12 @@
 .cheak {
   width: 20px;
   margin: 10px;
+}
+.selection-block {
+  margin: 20px;
+}
+.cheak-box-css {
+  height: 43px;
+  padding: 0px;
+  margin: 25px;
 }

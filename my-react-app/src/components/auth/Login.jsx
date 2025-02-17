@@ -1,12 +1,12 @@
 import { useState, useEffect } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { useDispatch } from "react-redux";
-import logo1 from "../../assets/netflix-icon.png"; // Adjust based on actual structure
-import logo2 from "../../assets/google-logo.png"; // Adjust based on actual structure
+import logo1 from "../../assets/netflix-icon.png"; 
+import logo2 from "../../assets/google-logo.png";
 import { getToken, storeToken } from "../../services/LocalStorageService";
 import { useLoginUserMutation } from "../../services/UserAuthApi";
-import { setUserToken } from "../../app/features/authSlice"; // Ensure you have the correct path for authSlice
-import "../../styles/NetflixClone.css";
+import { setUserToken } from "../../app/features/AuthSlicee"; 
+import "../../styles/componentscss/NetflixClone.css";
 
 function Login() {
   const [email, setEmail] = useState("");
@@ -26,21 +26,29 @@ function Login() {
   const handleSubmit = async (e) => {
     e.preventDefault();
     const actualData = { email, password };
-
     try {
       const res = await loginUser(actualData);
+      console.log("Login Response:", res);  
+  
       if (res.error) {
         setServerError(res.error.data.errors);
       } else if (res.data) {
-        storeToken(res.data.token);
-        const { access_token } = getToken();
-        dispatch(setUserToken({ access_token }));
-        navigate("/new");
+        console.log("Access Token:", res.data.access_token);
+        console.log("Refresh Token:", res.data.refresh_token);
+  
+        storeToken({
+          access_token: res.data.access_token,
+          refresh_token: res.data.refresh_token,
+        });
+  
+        dispatch(setUserToken({ access_token: res.data.access_token }));
+        navigate("/AdditionalUser");
       }
     } catch (error) {
       console.error("Login Error:", error);
     }
   };
+  
 
   return (
     <div className="home">
