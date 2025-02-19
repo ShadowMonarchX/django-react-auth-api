@@ -1,9 +1,9 @@
 import React from "react";
 import { Link } from "react-router-dom";
 import "bootstrap/dist/css/bootstrap.min.css";
-import "../../styles/Footer.css";
+import "../../styles/componentscss/Footer.css";
 
-function Footer() {
+function FooterAfterLogin() {
   return (
     <footer className="footer bg-dark text-white mt-5">
       <div className="container py-5">
@@ -85,4 +85,4 @@ function Footer() {
   );
 }
 
-export default Footer;
+export default FooterAfterLogin;

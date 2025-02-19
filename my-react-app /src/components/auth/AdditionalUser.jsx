@@ -1,10 +1,16 @@
 import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { useDispatch } from "react-redux";
-import { useAdditionalUserMutation } from "../../services/UserAuthApi";
+import {
+  useAdditionalUserMutation,
+  useFetchCountriesQuery,
+  useFetchStatesQuery,
+  useFetchCitiesQuery,
+} from "../../services/UserAuthApi";
 import { getToken } from "../../services/LocalStorageService";
-import { setUserToken } from "../../app/features/AuthSlice";
+import { setUserToken } from "../../app/features/authSlice";
 import "../../styles/componentscss/AdditionalUser.css";
+import { skipToken } from "@reduxjs/toolkit/query";
 
 function AdditionalUser() {
   const navigate = useNavigate();
@@ -12,13 +18,20 @@ function AdditionalUser() {
   const [firstName, setFirstName] = useState("");
   const [lastName, setLastName] = useState("");
   const [phoneNumber, setPhoneNumber] = useState("");
-  const [countries, setCountries] = useState([]);
-  const [states, setStates] = useState([]);
-  const [cities, setCities] = useState([]);
   const [selectedCountry, setSelectedCountry] = useState("");
   const [selectedState, setSelectedState] = useState("");
   const [selectedCity, setSelectedCity] = useState("");
   const [serverError, setServerError] = useState(null);
+
+  const { data: countries = [], error: countryError } =
+    useFetchCountriesQuery();
+  const { data: states = [], error: stateError } = useFetchStatesQuery(
+    selectedCountry || skipToken
+  );
+  const { data: cities = [], error: cityError } = useFetchCitiesQuery(
+    selectedState || skipToken
+  );
+
   const [additionalUser] = useAdditionalUserMutation();
 
   useEffect(() => {
@@ -30,101 +43,16 @@ function AdditionalUser() {
     }
   }, [dispatch]);
 
-  useEffect(() => {
-    fetchCountries();
-  }, []);
-
-  const fetchCountries = async () => {
-    try {
-      const token = localStorage.getItem("access_token");
-      if (!token) return;
-
-      const response = await fetch(
-        "http://localhost:8001/api/v1/auth/countries/",
-        {
-          method: "GET",
-          headers: {
-            "Content-Type": "application/json",
-            Authorization: `Bearer ${token}`,
-          },
-        }
-      );
-
-      if (!response.ok) throw new Error("Failed to fetch countries");
-      setCountries(await response.json());
-    } catch (error) {
-      console.error("Error fetching countries:", error);
-      setCountries([]);
-    }
-  };
-
-  useEffect(() => {
-    if (selectedCountry) fetchStates();
-  }, [selectedCountry]);
-
-  const fetchStates = async () => {
-    try {
-      const token = localStorage.getItem("access_token");
-      if (!token) return;
-
-      const response = await fetch(
-        `http://localhost:8001/api/v1/auth/states/?country=${selectedCountry}`,
-        {
-          method: "GET",
-          headers: {
-            "Content-Type": "application/json",
-            Authorization: `Bearer ${token}`,
-          },
-        }
-      );
-
-      if (!response.ok) throw new Error("Failed to fetch states");
-      setStates(await response.json());
-    } catch (error) {
-      console.error("Error fetching states:", error);
-      setStates([]);
-    }
-  };
-
-  useEffect(() => {
-    if (selectedState) fetchCities();
-  }, [selectedState]);
-
-  const fetchCities = async () => {
-    try {
-      const token = localStorage.getItem("access_token");
-      if (!token) return;
-
-      const response = await fetch(
-        `http://localhost:8001/api/v1/auth/cities/?state=${selectedState}`,
-        {
-          method: "GET",
-          headers: {
-            "Content-Type": "application/json",
-            Authorization: `Bearer ${token}`,
-          },
-        }
-      );
-
-      if (!response.ok) throw new Error("Failed to fetch cities");
-      setCities(await response.json());
-    } catch (error) {
-      console.error("Error fetching cities:", error);
-      setCities([]);
-    }
-  };
-
   const handleSubmit = async (e) => {
     e.preventDefault();
-  
+
     const access_token = localStorage.getItem("access_token");
-    // console.log("Access token retrieved:", access_token);
-  
+
     if (!access_token) {
       console.error("No access token found.");
-      return; 
+      return;
     }
-  
+
     const actualData = {
       first_name: firstName,
       last_name: lastName,
@@ -133,23 +61,29 @@ function AdditionalUser() {
       state_id: selectedState,
       city_id: selectedCity,
     };
-  
+
     try {
-      console.log("Body Data:", actualData);
-  
+      console.log(access_token)
+      console.log(actualData)
+      if (Array.isArray(actualData.phone_number) && actualData.phone_number.length > 0) {
+        actualData.phone_number = actualData.phone_number[0];
+      } else if(Array.isArray(actualData.phone_number) && actualData.phone_number.length === 0){
+        actualData.phone_number = ""; //or you might need to delete this key
+      }
+    
       const response = await additionalUser({
-        access_token, 
-        actualData,  
+        access_token,
+        actualData,
       }).unwrap();
-  
+
       console.log("Success:", response);
-      navigate("/"); 
+      navigate("/");
     } catch (error) {
       console.error("Error submitting data:", error);
       setServerError(error.data || { general: "An error occurred." });
     }
   };
-  
+
   return (
     <div className="home">
       <div className="hero-section">

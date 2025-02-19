@@ -7,6 +7,7 @@ from django.utils.translation import gettext_lazy as _
 from django.contrib.auth.models import Group, Permission
 from rest_framework_simplejwt.tokens import RefreshToken
 from .managers import UserManager
+from django.utils import timezone
 
 from accounts.managers import UserManager
 
@@ -97,6 +98,7 @@ class User(AbstractBaseUser, PermissionsMixin):
 class OneTimePassword(models.Model):
     user = models.OneToOneField(User, on_delete=models.CASCADE)
     otp = models.CharField(max_length=6)
+    created_at = models.DateTimeField(default=timezone.now) 
 
     def __str__(self):
         return f"{self.user.first_name} - OTP Code"

@@ -5,7 +5,7 @@ import logo1 from "../../assets/netflix-icon.png";
 import logo2 from "../../assets/google-logo.png";
 import { getToken, storeToken } from "../../services/LocalStorageService";
 import { useLoginUserMutation } from "../../services/UserAuthApi";
-import { setUserToken } from "../../app/features/AuthSlicee"; 
+import { setUserToken } from "../../app/features/authSlice"; 
 import "../../styles/componentscss/NetflixClone.css";
 
 function Login() {
@@ -42,7 +42,7 @@ function Login() {
         });
   
         dispatch(setUserToken({ access_token: res.data.access_token }));
-        navigate("/AdditionalUser");
+        navigate("/Dashboard");
       }
     } catch (error) {
       console.error("Login Error:", error);
@@ -105,7 +105,7 @@ function Login() {
                 <div>Remember me</div>
               </div>
             </div>
-            <Link to="/forgot-password">Need help?</Link>
+            <Link to="/forget-password">Need help?</Link>
           </form>
 
           <div className="form-signup">

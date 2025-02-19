@@ -7,10 +7,18 @@ class IsOwnerOrReadOnly(permissions.BasePermission):
     def has_object_permission(self, request, view, obj):
         if request.method in permissions.SAFE_METHODS:
             return True
+        
+        auth_header = request.headers.get("Authorization", "")
+        if not auth_header.startswith("Bearer "):
+            return False 
+
+        token_str = auth_header.split(" ")[1]
         try:
-            access_token = request.headers.get("Authorization").split(" ")[1]
-            AccessToken(access_token)  
-        except (IndexError, TokenError):
+            token = AccessToken(token_str)
+            user = token.payload.get('user_id')  # You can directly extract the user ID from the payload
+        except (TokenError, IndexError):
             raise PermissionDenied("Invalid or expired token. Please log in again.")
         
-        return obj == request.user
+        return user == obj.id  # Assuming obj has an 'id' attribute that corresponds to the user
+
+

@@ -1,7 +1,7 @@
 import React from "react";
 import { Link } from "react-router-dom";
 import "bootstrap/dist/css/bootstrap.min.css";
-import "../../styles/Navbar.css";
+import "../../styles/componentscss/Navbar.css";
 import "../auth/Register";
 import "../auth/Login";
 function Navbar({ isLoggedIn, username, handleLogout }) {

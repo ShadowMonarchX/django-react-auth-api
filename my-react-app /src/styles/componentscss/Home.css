@@ -1,11 +1,12 @@
 .home {
-  height: 100vh;
+  height: 60vh;
   display: flex;
   justify-content: center;
   align-items: center;
   text-align: center;
   color: white;
-  padding: 50px; /* Adjusted margin to padding for better responsiveness */
+  padding: 50px;
+  background: linear-gradient(135deg, #050505, #050505); /* Dark Gray Gradient */
 }
 
 .hero-section {
@@ -13,12 +14,12 @@
   margin: 0 auto;
 }
 
-.hero-section h1 {
+.hero-title {
   font-size: 3rem;
   margin-bottom: 20px;
 }
 
-.hero-section p {
+.hero-subtitle {
   font-size: 1.5rem;
   margin-bottom: 30px;
 }
@@ -34,7 +35,7 @@
 .search-container {
   display: flex;
   align-items: center;
-  background: rgba(255, 255, 255, 0.1);
+  background: #050505;
   padding: 0px;
   border-radius: 8px;
 }
@@ -46,10 +47,12 @@
   border-radius: 5px;
   font-size: 16px;
   outline: none;
+  background-color: #050505;
+  color: white;
 }
 
 .search-button {
-  background-color: #e50914; /* Netflix Red */
+  background-color: #e50914;
   color: white;
   border: none;
   padding: 10px 20px;
@@ -65,11 +68,11 @@
 
 /* Responsive Design */
 @media (max-width: 768px) {
-  .hero-section h1 {
+  .hero-title {
     font-size: 2.5rem;
   }
 
-  .hero-section p {
+  .hero-subtitle {
     font-size: 1.2rem;
   }
 
@@ -89,5 +92,5 @@
 }
 
 .f-element {
-  padding: 50px; /* Reduced excessive padding */
+  padding: 50px;
 }

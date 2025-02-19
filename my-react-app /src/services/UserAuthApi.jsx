@@ -62,6 +62,29 @@ export const userAuthApi = createApi({
         method: "GET",
       }),
     }),
+
+    // New endpoints for countries, states, and cities
+    fetchCountries: builder.query({
+      query: () => ({
+        url: "/countries/",
+        method: "GET",
+        headers: { "Content-Type": "application/json" },
+      }),
+    }),
+    fetchStates: builder.query({
+      query: (countryId) => ({
+        url: `/states/?country=${countryId}`,
+        method: "GET",
+        headers: { "Content-Type": "application/json" },
+      }),
+    }),
+    fetchCities: builder.query({
+      query: (stateId) => ({
+        url: `/cities/?state=${stateId}`,
+        method: "GET",
+        headers: { "Content-Type": "application/json" },
+      }),
+    }),
   }),
 });
 
@@ -73,4 +96,7 @@ export const {
   useForgotPasswordMutation,
   useResetPasswordMutation,
   useValidateResetTokenQuery,
+  useFetchCountriesQuery,
+  useFetchStatesQuery,
+  useFetchCitiesQuery,
 } = userAuthApi;
